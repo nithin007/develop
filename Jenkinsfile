@@ -2,9 +2,6 @@ def JENKINS_PLTF_GIT_BRANCH = env.BRANCH_NAME
 
 pipeline {
     agent {
-        node {
-            label 'deploy_ubuntu18_prod1'
-        }
     }
     options { skipDefaultCheckout() }
     parameters {
@@ -12,46 +9,8 @@ pipeline {
         choice(name: 'PRODUCT_NAME', choices: "advance\nadvise\nrecruit", description: 'Deploy for product name')
         string(name: 'RELEASE_NAME', description: 'The Product release version to install/upgrade')
         string(name: 'SUB_PRODUCT', description: '***Internal Use only***')
-        string(name: 'TARGET_POD', description: """"Name of the destination Pod where the Crm org is installed. Examples:<br>
-            <table>
-            <tr>
-                <td style="border: 1px solid black;">Advance</td>
-                <td style="border: 1px solid black;"><input type='text' value='E-D-ADV-UVA-05' /></td>
-            </tr>
-            <tr>
-                <td style="border: 1px solid black;">Advise</td>
-                <td style="border: 1px solid black;"><input type='text' value='E-D-ADS-UVA-08' /></td>
-            </tr>
-            <tr>
-                <td style="border: 1px solid black;">Recruit</td>
-                <td style="border: 1px solid black;"><input type='text' value='E-D-REC-UVA-12' /></td>
-            </tr>
-            <tr>
-                <td style="border: 1px solid black;">Core</td>
-                <td style="border: 1px solid black;"><input type='text' value='E-D-COR-UVA-04' /></td>
-            </tr>
-            </table>
-            <h2>POD Operations</h2><hr><hr>""")
-        booleanParam(name: 'ENABLE_CREDSSP', defaultValue: false, description: """<b>POD operation</b>
-            <br>If true, as a pre-step the pipeline will enable (if not already enabled) Credssp authentication on the deployment server, WFE servers, and SUP servers.""")
-        booleanParam(name: 'COPY_ARTIFACTS', defaultValue: true, description: """<b>POD operation</b>
-            <br>If true, will copy the artifacts from S3 to the target admin server, and other POD servers""")
-        booleanParam(name: 'PRE_VALIDATE', defaultValue: false, description: """<b>POD operation</b>
-            <br>Validate the Host File and Task Service
-            <br>Pre Validate internal DNS, route53, Status of Endpoint URLs(crm, wfe, ts and ws sites)
-            <br><span style="color:red"><b>This needs to be checked in order to Validate the endpoints</b><span>""")
-        booleanParam(name: 'VALIDATE_HOSTS_FILE', defaultValue: false, description: 'Validates if the Entry for the isolated FE server is present in Deployment Server')
-        booleanParam(name: 'VALIDATE_TASKSERVICE', defaultValue: false, description: 'Validates if the Task Service is running in all the servers')
-        booleanParam(name: 'DEPLOY_TASKSERVICE', defaultValue: false, description: """<b>POD operation</b>
-            <br>If true, will deploy the Ellucian task service""")
-        booleanParam(name: 'DEPLOY_GAC', defaultValue: false, description: """<b>POD operation</b>
-            <br>If true, will deploy the GAC to all pod servers.""")
-        booleanParam(name: 'DEPLOY_TASKSERVICEMONITOR', defaultValue: false, description: """<b>POD operation</b>
-            <br>If true, will deploy the Ellucian task service monitoring site<hr>""")
-        booleanParam(name: 'RESET_IIS', defaultValue: false, description: """<b>POD operation</b>
-            <br>If true, will reset IIS on the "isolated" FE server, which will either be defined in properties or will be FE04.
-            <hr><hr>
-            <h2>Org Operations</h2>""")
+        string(name: 'TARGET_POD', description: '')
+        extendedChoice(name: 'CUSTOM_ORG_OPERATIONS', type: 'PT_MULTI_SELECT', value:'One,Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten')
         text(name: 'UserInput', description: """<h5>A comma (,) seperated text file (any file name with extension .txt or .csv) listing the configurations.<br></h5>
             Example:<br>
             <table>
