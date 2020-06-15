@@ -2,6 +2,9 @@ def JENKINS_PLTF_GIT_BRANCH = env.BRANCH_NAME
 
 pipeline {
     agent {
+        node {
+            label 'ubuntu18'
+        }
     }
     options { skipDefaultCheckout() }
     parameters {
